@@ -80,7 +80,7 @@ const Loginform = () => {
         id="user-error"
         style={{ display: userError ? "block" : "none", color: "red" }}
       >
-        User not Found
+        User not found
       </p>
     </div>
   );
