@@ -1,52 +1,89 @@
-import React, { useState, useRef} from "react";
-import Data  from "../../Data"
-const Loginform = ()=>{
-  
-let [userError , setUserError] = useState(false)
-let [passwordError , setpasswordError] = useState(false)
+import React, { useState, useRef } from "react";
+import Data from "../../Data";
 
+const Loginform = () => {
 
+  const [userError, setUserError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
-    let email = useRef("")
-    let password = useRef("")
+  const email = useRef("");
+  const password = useRef("");
 
-function handleSubmit(email,password){
-    let flag = false
+  function handleSubmit(email, password) {
 
-    Data.forEach(v=>{
-     if(v.email==email.value.trim() && v.password==password.value.trim()){
-        setTimeout(()=>{
-         console.log(v)
-        },3000)
-        flag = true
-     }
-     else if(v.email==email.value.trim() && v.password!==password.value.trim())
-           {flag = true
-           setpasswordError(true)}
-           
-    })
-  
-if(!flag){
-    setUserError(true)
-}
+    const enteredEmail = email.value.trim();
+    const enteredPassword = password.value.trim();
 
-}
+    // find user by email
+    const user = Data.find(v => v.email === enteredEmail);
 
-    return (
-        <div>
-       <form onSubmit={(e)=>{
-         e.preventDefault()
-        handleSubmit(email.current,password.current)
-        }}>
-        <input type="email" placeholder="enter your email" id="input-email" ref={email}/><br/><br/>
-        <input type="password" placeholder="enter your password" id="input-password" ref={password}/><br/><br/>
-        {passwordError && <p id="password-error">Password Incorrect</p>}
-        <button type="submit" id="submit-form-btn" >Login</button>
+    // ❌ User not found
+    if (!user) {
+      setUserError(true);
+      setPasswordError(false);
+      return;
+    }
 
-</form>
-      {userError && <p id="user-error">User not Found</p>}
-        </div>
-    )
-}
+    // ❌ Password incorrect
+    if (user.password !== enteredPassword) {
+      setUserError(false);
+      setPasswordError(true);
+      return;
+    }
 
-export default Loginform
+    // ✅ Correct login
+    setUserError(false);
+    setPasswordError(false);
+
+    console.log("Login successful:", user);
+  }
+
+  return (
+    <div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(email.current, password.current);
+        }}
+      >
+        <input
+          type="email"
+          placeholder="enter your email"
+          id="input-email"
+          ref={email}
+        />
+        <br /><br />
+
+        <input
+          type="password"
+          placeholder="enter your password"
+          id="input-password"
+          ref={password}
+        />
+        <br /><br />
+
+        {/* Always present in DOM (Cypress friendly) */}
+        <p
+          id="password-error"
+          style={{ display: passwordError ? "block" : "none", color: "red" }}
+        >
+          Password Incorrect
+        </p>
+
+        <button type="submit" id="submit-form-btn">
+          Login
+        </button>
+      </form>
+
+      {/* Always present in DOM */}
+      <p
+        id="user-error"
+        style={{ display: userError ? "block" : "none", color: "red" }}
+      >
+        User not Found
+      </p>
+    </div>
+  );
+};
+
+export default Loginform;
