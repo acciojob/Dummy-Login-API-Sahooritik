@@ -35,7 +35,9 @@ const Loginform = () => {
     setUserError(false);
     setPasswordError(false);
 
-    console.log("Login successful:", user);
+    setTimeout(() => {
+        console.log( user);
+    }, 3000);
   }
 
   return (
@@ -65,7 +67,7 @@ const Loginform = () => {
         {/* Always present in DOM (Cypress friendly) */}
         <p
           id="password-error"
-          style={{ display: passwordError ? "block" : "none", color: "red" }}
+          
         >
           Password Incorrect
         </p>
@@ -78,7 +80,7 @@ const Loginform = () => {
       {/* Always present in DOM */}
       <p
         id="user-error"
-        style={{ display: userError ? "block" : "none", color: "red" }}
+        
       >
         User not found
       </p>
